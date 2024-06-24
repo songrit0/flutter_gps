@@ -13,13 +13,36 @@ class HomeView extends StatelessWidget {
       appBar: AppBar(
         title: Text('GetX Example'),
       ),
-      body: Center(
-        child: Obx(() {
-          return Text(
-            'Clicks: ${controller.count}',
-            style: TextStyle(fontSize: 24),
-          );
-        }),
+      body: Column(
+        children: [
+          // Center(
+          //   child: Obx(() {
+          //     return Text(
+          //       'Clicks: ${controller.count}',
+          //       style: TextStyle(fontSize: 24),
+          //     );
+          //   }),
+          // ),
+          ElevatedButton(
+              onPressed: () {
+                controller.getCurrentLocation();
+              },
+              child: Text('getCurrentLocation')),
+          Text('latitude'),
+          TextField(
+            controller: controller.latitude,
+          ),
+          Text('longitude'),
+          TextField(
+            controller: controller.longitude,
+          ),
+          ElevatedButton(
+              onPressed: () {
+                setworklocation(double.parse(controller.latitude.text),
+                    double.parse(controller.longitude.text));
+              },
+              child: Text('set new')),
+        ],
       ),
       floatingActionButton: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,7 +63,13 @@ class HomeView extends StatelessWidget {
           ),
           FloatingActionButton(
             onPressed: () {
-              showNotification(1, 'test', 'showNotification');
+              initializeService();
+            },
+            child: Icon(Icons.rocket_launch),
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              getCurrentLocation();
             },
             child: Icon(Icons.e_mobiledata),
           ),

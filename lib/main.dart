@@ -6,7 +6,6 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_gps/app/ui/home/home_binding.dart';
 import 'package:flutter_gps/app/ui/home/home_page.dart';
 import 'package:flutter_gps/service/flutter_background_service.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:get/get.dart';
 
@@ -14,7 +13,9 @@ final service = FlutterBackgroundService();
 
 void main() {
   runApp(MyApp());
-  initializeService();
+  getCurrentLocation();
+
+  // initializeService();
   initLocalNotifications();
 }
 
