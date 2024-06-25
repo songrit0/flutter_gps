@@ -8,10 +8,10 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HomeController controller = Get.find();
-
+    RxString isrun = RxString('stopService');
     return Scaffold(
       appBar: AppBar(
-        title: Text('GetX Example'),
+        title: const Text('GetX Example'),
       ),
       body: Column(
         children: [
@@ -27,21 +27,54 @@ class HomeView extends StatelessWidget {
               onPressed: () {
                 controller.getCurrentLocation();
               },
-              child: Text('getCurrentLocation')),
-          Text('latitude'),
+              child: const Text('getCurrentLocation')),
+          const Text('latitude'),
           TextField(
             controller: controller.latitude,
           ),
-          Text('longitude'),
+          const Text('longitude'),
           TextField(
             controller: controller.longitude,
           ),
           ElevatedButton(
               onPressed: () {
+                if (controller.latitude.text != '' &&
+                    controller.longitude.text != '') {}
                 setworklocation(double.parse(controller.latitude.text),
                     double.parse(controller.longitude.text));
               },
-              child: Text('set new')),
+              child: const Text('set new')),
+          ElevatedButton(
+            onPressed: () {
+              // FlutterBackgroundService().invoke('start');
+              FlutterBackgroundService().invoke('setAsForeground');
+            },
+            child: const Text('setAsForeground'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // FlutterBackgroundService().invoke('start');
+              FlutterBackgroundService().invoke('setAsBackground');
+            },
+            child: const Text('setAsBackground'),
+          ),
+          Obx(() => ElevatedButton(
+                onPressed: () async {
+                  final service = FlutterBackgroundService();
+                  bool isRunning = await service.isRunning();
+                  if (isRunning) {
+                    service.invoke('stopService');
+                  } else {
+                    service.startService();
+                  }
+                  if (!isRunning) {
+                    isrun.value = 'stop Service';
+                  } else {
+                    isrun.value = 'start Service';
+                  }
+                },
+                child: Text('${isrun.value}'),
+              )),
         ],
       ),
       floatingActionButton: Column(
@@ -50,28 +83,9 @@ class HomeView extends StatelessWidget {
         children: [
           FloatingActionButton(
             onPressed: () {
-              // FlutterBackgroundService().invoke('start');
-              startBackgroundService();
-            },
-            child: Icon(Icons.add),
-          ),
-          FloatingActionButton(
-            onPressed: () {
-              stopBackgroundService();
-            },
-            child: Icon(Icons.stop),
-          ),
-          FloatingActionButton(
-            onPressed: () {
-              initializeService();
-            },
-            child: Icon(Icons.rocket_launch),
-          ),
-          FloatingActionButton(
-            onPressed: () {
               getCurrentLocation();
             },
-            child: Icon(Icons.e_mobiledata),
+            child: const Icon(Icons.e_mobiledata),
           ),
         ],
       ),

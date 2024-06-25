@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 
 class HomeController extends GetxController {
   var count = 0.obs;
-  TextEditingController latitude = TextEditingController();
-  TextEditingController longitude = TextEditingController();
+  TextEditingController latitude = TextEditingController(text: '0');
+  TextEditingController longitude = TextEditingController(text: '0');
   void increment() {
     count++;
   }
