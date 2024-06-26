@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 
 Future<void> initializeService() async {
   final service = FlutterBackgroundService();
@@ -30,7 +31,6 @@ Future<bool> onIosBackground(ServiceInstance service) async {
   return true;
 }
 
-@pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
   DartPluginRegistrant.ensureInitialized();
   print('Service started');
@@ -48,28 +48,27 @@ void onStart(ServiceInstance service) async {
 
     service.on("stopService").listen((event) {
       print("Received 'stopService' event");
-      service.stopSelf();
+      service.stopSelf(); // Stop the service when requested by user
     });
-
-    // Ensure the service starts as a foreground service
-    service.setAsForegroundService();
 
     Timer.periodic(const Duration(seconds: 1), (timer) async {
       if (await service.isForegroundService()) {
         service.setForegroundNotificationInfo(
-          title: 'Service Running',
+          title: 'setAsForeground',
           content:
               "Time: ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}",
         );
         print(
-            "Service Running at ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}");
+            "setAsForeground Running at ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}");
       }
-      // Update the service state
+      print(
+          "setAsForeground Running at ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}");
       service.invoke('update');
     });
   }
 }
 
+onServiceRun() {}
 Future<void> initLocalNotifications() async {
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel', // id
@@ -93,14 +92,6 @@ Future<void> initLocalNotifications() async {
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
-
-// Future<void> initLocalNotifications() async {
-//   var android = AndroidInitializationSettings('@mipmap/ic_launcher');
-//   var initializationSettings = InitializationSettings(
-//     android: android,
-//   );
-//   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-// }
 
 Future<void> showNotification(int id, String title, String body) async {
   const NotificationDetails platformChannelDetails = NotificationDetails(
